@@ -3,11 +3,13 @@ const app=express();
 const mongoose=require("mongoose");
 const Listing=require("./models/listing.js");
 const path=require("path");
+const methodOverride=require("method-override");
 
 
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
 app.use(express.urlencoded({extended:true}));
+app.use(methodOverride("_method"));
 
 const MONGO_URL="mongodb://127.0.0.1:27017/wanderlust";
 
@@ -82,6 +84,37 @@ async function main(){
 
  })
 
+ // edit route
+ app.get("/listings/:id/edit",async (req,res)=>{
+    let {id}=req.params;
+    const listing=await Listing.findById(id);
+    res.render("listings/edit.ejs",{listing});
+ })
+
+ // put request
+ app.put("/listings/:id",async (req,res)=>{
+    let {id}=req.params;
+    let listing=req.body.listing;
+    
+    const newListing = {
+        title: listing.title,
+        description: listing.description,
+        image: {
+            filename: "listingimage",
+            url: listing.image
+        },
+        price: listing.price,
+        location: listing.location,
+        country: listing.country
+    };
+    //console.log(newListing);
+    const finalListing=new Listing(newListing);
+
+   Listing.findByIdAndUpdate(id,{newListing});
+
+   res.redirect("/listings");
+
+ })
 
  // show route to print the data of clicked title
 
@@ -93,10 +126,7 @@ async function main(){
 
  })
 
- // CREATE ROUTE.. for new listing
-//  app.get("/listings/new",(req,res)=>{ 
-//     res.render("listings/new.ejs"); 
-//  })
+ 
 
  app.listen(8080,()=>{
      console.log("server is listening to port 8080");
