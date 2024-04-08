@@ -51,6 +51,38 @@ async function main(){
     // res.send("working");
  });
 
+
+ // CREATE ROUTE.. for new listing
+ app.get("/listings/new",(req,res)=>{
+    res.render("listings/new.ejs"); 
+ })
+
+ app.post("/listings",async (req,res)=>{
+    let listing=req.body.listing;
+    
+    const newListing = {
+        title: listing.title,
+        description: listing.description,
+        image: {
+            filename: "listingimage",
+            url: listing.image
+        },
+        price: listing.price,
+        location: listing.location,
+        country: listing.country
+    };
+
+    const finalListing=new Listing(newListing);
+
+    await finalListing.save();
+    res.redirect("/listings");
+    
+
+    //console.log(newListing);
+
+ })
+
+
  // show route to print the data of clicked title
 
  app.get("/listings/:id",async (req,res)=>{
@@ -60,6 +92,11 @@ async function main(){
      res.render("listings/show.ejs",{listing});
 
  })
+
+ // CREATE ROUTE.. for new listing
+//  app.get("/listings/new",(req,res)=>{ 
+//     res.render("listings/new.ejs"); 
+//  })
 
  app.listen(8080,()=>{
      console.log("server is listening to port 8080");
