@@ -94,6 +94,7 @@ async function main(){
  // put request
  app.put("/listings/:id",async (req,res)=>{
     let {id}=req.params;
+    console.log(id);
     let listing=req.body.listing;
     
     const newListing = {
@@ -107,10 +108,11 @@ async function main(){
         location: listing.location,
         country: listing.country
     };
-    //console.log(newListing);
-    const finalListing=new Listing(newListing);
 
-   Listing.findByIdAndUpdate(id,{newListing});
+
+  const updatedList=await Listing.findByIdAndUpdate(id,newListing);
+
+  // Listing.findByIdAndUpdate(id,{newListing});
 
    res.redirect("/listings");
 
