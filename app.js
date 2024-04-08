@@ -128,6 +128,13 @@ async function main(){
 
  })
 
+ app.delete("/listings/:id",async (req,res)=>{
+    let {id}=req.params;
+    const deletedListing=await Listing.findByIdAndDelete(id);
+    console.log(deletedListing);
+    res.redirect("/listings");   
+})
+
  
 
  app.listen(8080,()=>{
