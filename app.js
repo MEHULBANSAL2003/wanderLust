@@ -6,6 +6,7 @@ const path=require("path");
 const methodOverride=require("method-override");
 const ejsMate=require("ejs-mate"); // for ejs styling.. templating   
 const wrapAsync=require("./utils/wrapAsync.js")
+const ExpressError=require("./utils/ExpressError.js")
 
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
@@ -50,12 +51,12 @@ async function main(){
 //  })    
  
  // INDEX ROUTE: get request on /listings..!!
- app.get("/listings", async (req,res)=>{
+ app.get("/listings", wrapAsync(async (req,res)=>{
    const listings= await Listing.find({});
    res.render("listings/index.ejs",{listings});
 
     // res.send("working");
- });
+ }));
 
 
  // CREATE ROUTE.. for new listing
@@ -65,6 +66,10 @@ async function main(){
 
  app.post("/listings",wrapAsync(async (req,res,next)=>{
 
+
+    if(!req.body.listing){
+        throw new ExpressError(400,"Send valid data for listing")
+    }
     // try{
     let listing=req.body.listing;
     
@@ -94,14 +99,17 @@ async function main(){
  }));
 
  // edit route
- app.get("/listings/:id/edit",async (req,res)=>{
+ app.get("/listings/:id/edit",wrapAsync(async (req,res)=>{
     let {id}=req.params;
     const listing=await Listing.findById(id);
     res.render("listings/edit.ejs",{listing});
- })
+ }));
 
  // put request
- app.put("/listings/:id",async (req,res)=>{
+ app.put("/listings/:id",wrapAsync(async (req,res)=>{
+    if(!req.body.listing){
+        throw new ExpressError(400,"Send valid data for listing")
+    }
     let {id}=req.params;
     console.log(id);
     let listing=req.body.listing;
@@ -125,28 +133,33 @@ async function main(){
 
    res.redirect("/listings");
 
- })
+ }));
 
  // show route to print the data of clicked title
 
- app.get("/listings/:id",async (req,res)=>{
+ app.get("/listings/:id",wrapAsync(async (req,res)=>{
     let {id}=req.params;
      const listing=await Listing.findById(id);
 
      res.render("listings/show.ejs",{listing});
 
- })
+ }));
 
- app.delete("/listings/:id",async (req,res)=>{
+ app.delete("/listings/:id",wrapAsync(async (req,res)=>{
     let {id}=req.params;
     const deletedListing=await Listing.findByIdAndDelete(id);
     console.log(deletedListing);
     res.redirect("/listings");   
-})
+}));
 
- 
+app.all("*",(req,res,next)=>{
+    next(new ExpressError(404,"Page Not Found")); 
+}) 
+
 app.use((err,req,res,next)=>{
-    res.send("something went wrong")
+    let{statusCode,message}=err;
+    res.status(statusCode).send(message);
+  
 })
 
  app.listen(8080,()=>{
