@@ -5,6 +5,7 @@ const Listing=require("./models/listing.js");
 const path=require("path");
 const methodOverride=require("method-override");
 const ejsMate=require("ejs-mate"); // for ejs styling.. templating   
+const wrapAsync=require("./utils/wrapAsync.js")
 
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
@@ -28,6 +29,7 @@ async function main(){
  }
  
  
+
  app.get("/", (req,res)=>{
      res.send("hi i m root");
  })
@@ -61,9 +63,9 @@ async function main(){
     res.render("listings/new.ejs"); 
  })
 
- app.post("/listings",async (req,res,next)=>{
+ app.post("/listings",wrapAsync(async (req,res,next)=>{
 
-    try{
+    // try{
     let listing=req.body.listing;
     
     const newListing = {
@@ -82,14 +84,14 @@ async function main(){
 
     await finalListing.save();
     res.redirect("/listings");
-}catch(err){
-    next(err);
-}
+// }catch(err){
+//     next(err);
+// }
     
 
     //console.log(newListing);
 
- })
+ }));
 
  // edit route
  app.get("/listings/:id/edit",async (req,res)=>{
