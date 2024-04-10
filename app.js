@@ -61,7 +61,9 @@ async function main(){
     res.render("listings/new.ejs"); 
  })
 
- app.post("/listings",async (req,res)=>{
+ app.post("/listings",async (req,res,next)=>{
+
+    try{
     let listing=req.body.listing;
     
     const newListing = {
@@ -80,6 +82,9 @@ async function main(){
 
     await finalListing.save();
     res.redirect("/listings");
+}catch(err){
+    next(err);
+}
     
 
     //console.log(newListing);
@@ -138,6 +143,9 @@ async function main(){
 })
 
  
+app.use((err,req,res,next)=>{
+    res.send("something went wrong")
+})
 
  app.listen(8080,()=>{
      console.log("server is listening to port 8080");
