@@ -1,8 +1,8 @@
 // this file is for server side validation using joi
 const Joi=require("joi");
 
-module.exports.ListingSchema=Joi.object({
-    Listing :Joi.object({
+module.exports.listingSchema=Joi.object({
+    listing :Joi.object({
         title:Joi.string().required(),
         description:Joi.string().required(),
         country:Joi.string().required(),
