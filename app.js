@@ -72,7 +72,23 @@ async function main(){
     }
     // try{
     let listing=req.body.listing;
-    
+    // now we will check fo individual keys whethere they are valid or not..!!
+    if(!listing.title){
+        throw new ExpressError(400,"Title is missing")
+    }
+    if(!listing.description){
+        throw new ExpressError(400,"Description is missing")
+    }
+    if(!listing.location){
+        throw new ExpressError(400,"Location is missing")
+    }
+    if(!listing.price){
+        throw new ExpressError(400,"Price is missing")
+    }
+    if(!listing.country){
+        throw new ExpressError(400,"Country is missing")
+    }
+
     const newListing = {
         title: listing.title,
         description: listing.description,
