@@ -7,6 +7,7 @@ const methodOverride=require("method-override");
 const ejsMate=require("ejs-mate"); // for ejs styling.. templating   
 const wrapAsync=require("./utils/wrapAsync.js")
 const ExpressError=require("./utils/ExpressError.js")
+ const {ListingSchema}=require("./schema.js");
 
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
@@ -66,28 +67,34 @@ async function main(){
 
  app.post("/listings",wrapAsync(async (req,res,next)=>{
 
-
-    if(!req.body.listing){
-        throw new ExpressError(400,"Send valid data for listing")
-    }
+   // validating server side using JOI
+   let result= ListingSchema.validate(req.body);  // it will check the data.. and if any field is misisng it will give error
+   //console.log(result);
+   if(result.error){  // if errorr is there we will throw it...!!
+    throw new ExpressError(400,result.error);
+   }
+    // if(!req.body.listing){
+    //     throw new ExpressError(400,"Send valid data for listing")
+    // }
     // try{
     let listing=req.body.listing;
     // now we will check fo individual keys whethere they are valid or not..!!
-    if(!listing.title){
-        throw new ExpressError(400,"Title is missing")
-    }
-    if(!listing.description){
-        throw new ExpressError(400,"Description is missing")
-    }
-    if(!listing.location){
-        throw new ExpressError(400,"Location is missing")
-    }
-    if(!listing.price){
-        throw new ExpressError(400,"Price is missing")
-    }
-    if(!listing.country){
-        throw new ExpressError(400,"Country is missing")
-    }
+    // if(!listing.title){
+    //     throw new ExpressError(400,"Title is missing")
+    // }
+    // if(!listing.description){
+    //     throw new ExpressError(400,"Description is missing")
+    // }
+    // if(!listing.location){
+    //     throw new ExpressError(400,"Location is missing")
+    // }
+    // if(!listing.price){
+    //     throw new ExpressError(400,"Price is missing")
+    // }
+    // if(!listing.country){
+    //     throw new ExpressError(400,"Country is missing")
+    // }
+
 
     const newListing = {
         title: listing.title,
