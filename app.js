@@ -36,6 +36,19 @@ async function main(){
      res.send("hi i m root");
  })
  
+// just creating fucntion for validating schema in middleware
+
+const validateListing=(req,res,next)=>{
+    let {error}= listingSchema.validate(req.body);  // it will check the data.. and if any field is missing it will give error
+    if(error){  // if errorr is there we will throw it...!!
+        let errMsg=error.details.map((el)=> el.message).join(",");
+     throw new ExpressError(400,errMsg);
+    }
+    else{
+        next();
+    }
+}
+
 //  app.get("/testListing",async (req,res)=>{
 //      let sampleListing=new Listing({
 //          title:"My New Villa",
@@ -65,14 +78,14 @@ async function main(){
     res.render("listings/new.ejs"); 
  })
 
- app.post("/listings",wrapAsync(async (req,res,next)=>{
+ app.post("/listings",validateListing,wrapAsync(async (req,res,next)=>{
 
    //validating server side using JOI
-   let result= listingSchema.validate(req.body);  // it will check the data.. and if any field is missing it will give error
-   console.log(result);
-   if(result.error){  // if errorr is there we will throw it...!!
-    throw new ExpressError(400,result.error);
-   }
+//     let result= listingSchema.validate(req.body);  // it will check the data.. and if any field is missing it will give error
+//    console.log(result);
+//    if(result.error){  // if errorr is there we will throw it...!!
+//     throw new ExpressError(400,result.error);
+//    }
     // if(!req.body.listing){
     //     throw new ExpressError(400,"Send valid data for listing")
     // }
@@ -129,10 +142,10 @@ async function main(){
  }));
 
  // put request
- app.put("/listings/:id",wrapAsync(async (req,res)=>{
-    if(!req.body.listing){
-        throw new ExpressError(400,"Send valid data for listing")
-    }
+ app.put("/listings/:id",validateListing,wrapAsync(async (req,res)=>{
+    // if(!req.body.listing){
+    //     throw new ExpressError(400,"Send valid data for listing")
+    // }
     let {id}=req.params;
     console.log(id);
     let listing=req.body.listing;
