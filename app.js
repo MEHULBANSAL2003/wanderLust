@@ -40,8 +40,10 @@ async function main(){
 
 const validateListing=(req,res,next)=>{
     let {error}= listingSchema.validate(req.body);  // it will check the data.. and if any field is missing it will give error
+    
     if(error){  // if errorr is there we will throw it...!!
         let errMsg=error.details.map((el)=> el.message).join(",");
+         console.log(errMsg);
      throw new ExpressError(400,errMsg);
     }
     else{
