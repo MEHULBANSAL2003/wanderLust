@@ -208,6 +208,8 @@ const validateReview=(req,res,next)=>{
     res.redirect("/listings");   
 }));
 
+//REVIEWS..!!
+
 // routes for reviews..!!
 app.post("/listings/:id/reviews",validateReview,wrapAsync(async (req,res)=>{
     let listing=await Listing.findById(req.params.id);
@@ -222,6 +224,17 @@ app.post("/listings/:id/reviews",validateReview,wrapAsync(async (req,res)=>{
     res.redirect(`/listings/${listing._id}`);
 }));
 
+
+// delete route for reviews
+
+app.delete("/listings/:id/reviews/:reviewId",wrapAsync(async(req,res)=>{
+  //  console.log("wroking");
+   let {id,reviewId}=req.params;
+   await Listing.findByIdAndUpdate(id,{$pull:{reviews:reviewId}});
+  await Review.findByIdAndDelete(reviewId);
+ res.redirect(`/listings/${id}`);
+ 
+}));
 
 app.all("*",(req,res,next)=>{
     next(new ExpressError(404,"Page Not Found")); 
