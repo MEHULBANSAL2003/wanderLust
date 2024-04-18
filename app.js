@@ -8,6 +8,7 @@ const ejsMate=require("ejs-mate"); // for ejs styling.. templating
 const wrapAsync=require("./utils/wrapAsync.js")
 const ExpressError=require("./utils/ExpressError.js")
  const {listingSchema}=require("./schema.js");
+ const Review=require("./models/review.js");
 
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
@@ -189,6 +190,21 @@ const validateListing=(req,res,next)=>{
     console.log(deletedListing);
     res.redirect("/listings");   
 }));
+
+// routes for reviews..!!
+app.post("/listings/:id/reviews",async (req,res)=>{
+    let listing=await Listing.findById(req.params.id);
+    let newReview=new Review(req.body.review);
+
+    listing.reviews.push(newReview);
+
+    await newReview.save();
+    await listing.save();
+    
+    console.log("review saved successfully");
+    res.redirect(`/listings/${listing._id}`);
+});
+
 
 app.all("*",(req,res,next)=>{
     next(new ExpressError(404,"Page Not Found")); 
