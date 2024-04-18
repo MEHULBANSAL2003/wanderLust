@@ -2,6 +2,8 @@ const mongoose=require("mongoose");
 
 const Schema =mongoose.Schema;
 
+const Review=require("./review.js");
+
 const ListingSchema= new Schema({
  title:{
     type:String,
@@ -36,6 +38,14 @@ filename:{
  ],
 
 
+});
+
+
+// adding post middleware to delete all the reviews associated with the listing which is deleted..!!
+ListingSchema.post("findOneAndDelete",async(listing)=>{  // here listing in async has the data of the deleted leisting
+  if(listing){
+    await Review.deleteMany({_id:{$in:listing.reviews}});
+  }
 });
 
 const Listing = mongoose.model("Listing",ListingSchema);

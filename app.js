@@ -40,11 +40,11 @@ async function main(){
 // just creating fucntion for validating schema in middleware
 
 const validateListing=(req,res,next)=>{
-    let {error}= reviewSchema.validate(req.body);  // it will check the data.. and if any field is missing it will give error
+    let {error}= listingSchema.validate(req.body);  // it will check the data.. and if any field is missing it will give error
     
     if(error){  // if errorr is there we will throw it...!!
         let errMsg=error.details.map((el)=> el.message).join(",");
-         console.log(errMsg);
+            console.log(errMsg);
      throw new ExpressError(400,errMsg);
     }
     else{
@@ -203,7 +203,7 @@ const validateReview=(req,res,next)=>{
 
  app.delete("/listings/:id",wrapAsync(async (req,res)=>{
     let {id}=req.params;
-    const deletedListing=await Listing.findByIdAndDelete(id);
+    const deletedListing=await Listing.findByIdAndDelete(id); // this line will automatically trigger mongoose middleware
     console.log(deletedListing);
     res.redirect("/listings");   
 }));
@@ -235,6 +235,9 @@ app.delete("/listings/:id/reviews/:reviewId",wrapAsync(async(req,res)=>{
  res.redirect(`/listings/${id}`);
  
 }));
+
+
+
 
 app.all("*",(req,res,next)=>{
     next(new ExpressError(404,"Page Not Found")); 
