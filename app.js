@@ -7,7 +7,7 @@ const methodOverride=require("method-override");
 const ejsMate=require("ejs-mate"); // for ejs styling.. templating   
 const wrapAsync=require("./utils/wrapAsync.js")
 const ExpressError=require("./utils/ExpressError.js")
- const {listingSchema}=require("./schema.js");
+ const {listingSchema,reviewSchema}=require("./schema.js");
  const Review=require("./models/review.js");
 
 app.set("view engine","ejs");
@@ -40,7 +40,7 @@ async function main(){
 // just creating fucntion for validating schema in middleware
 
 const validateListing=(req,res,next)=>{
-    let {error}= listingSchema.validate(req.body);  // it will check the data.. and if any field is missing it will give error
+    let {error}= reviewSchema.validate(req.body);  // it will check the data.. and if any field is missing it will give error
     
     if(error){  // if errorr is there we will throw it...!!
         let errMsg=error.details.map((el)=> el.message).join(",");
@@ -51,6 +51,23 @@ const validateListing=(req,res,next)=>{
         next();
     }
 }
+
+// function for server side validation of reviews
+const validateReview=(req,res,next)=>{
+    let {error}= reviewSchema.validate(req.body);  // it will check the data.. and if any field is missing it will give error
+    
+    if(error){  // if errorr is there we will throw it...!!
+        let errMsg=error.details.map((el)=> el.message).join(",");
+         console.log(errMsg);
+     throw new ExpressError(400,errMsg);
+    }
+    else{
+        next();
+    }
+}
+
+
+ 
 
 //  app.get("/testListing",async (req,res)=>{
 //      let sampleListing=new Listing({
@@ -192,7 +209,7 @@ const validateListing=(req,res,next)=>{
 }));
 
 // routes for reviews..!!
-app.post("/listings/:id/reviews",async (req,res)=>{
+app.post("/listings/:id/reviews",validateReview,wrapAsync(async (req,res)=>{
     let listing=await Listing.findById(req.params.id);
     let newReview=new Review(req.body.review);
 
@@ -203,7 +220,7 @@ app.post("/listings/:id/reviews",async (req,res)=>{
     
     console.log("review saved successfully");
     res.redirect(`/listings/${listing._id}`);
-});
+}));
 
 
 app.all("*",(req,res,next)=>{
