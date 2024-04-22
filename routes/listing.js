@@ -4,6 +4,7 @@ const wrapAsync=require("../utils/wrapAsync.js")
 const {listingSchema}=require("../schema.js");
 const ExpressError=require("../utils/ExpressError.js")
 const Listing=require("../models/listing.js");
+const {isLoggedIn}=require("../middleware.js");
 
 
 
@@ -33,12 +34,13 @@ router.get(
 );
 
 // CREATE ROUTE.. for new listing
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn,(req, res) => {
+ 
   res.render("listings/new.ejs");
 });
 
 router.post(
-  "/",
+  "/",isLoggedIn,
   validateListing,
   wrapAsync(async (req, res, next) => {
     let listing = req.body.listing;
@@ -65,7 +67,7 @@ router.post(
 
 // edit route
 router.get(
-  "/:id/edit",
+  "/:id/edit",isLoggedIn,
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id);
@@ -79,7 +81,7 @@ router.get(
 
 // put request
 router.put(
-  "/:id",
+  "/:id",isLoggedIn,
   validateListing,
   wrapAsync(async (req, res) => {
     let { id } = req.params;
@@ -124,7 +126,7 @@ router.get(
 );
 
 router.delete(
-  "/:id",
+  "/:id",isLoggedIn,
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     const deletedListing = await Listing.findByIdAndDelete(id); // this line will automatically trigger mongoose middleware
