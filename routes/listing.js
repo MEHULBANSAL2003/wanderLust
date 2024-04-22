@@ -58,6 +58,7 @@ router.post(
     const finalListing = new Listing(newListing);
 
     await finalListing.save();
+    req.flash("success","new lisitng created successfully!"); // flash msg when new lisitng is created  
     res.redirect("/listings");
   })
 );
@@ -96,6 +97,7 @@ router.put(
     const updatedList = await Listing.findByIdAndUpdate(id, newListing);
 
     // Listing.findByIdAndUpdate(id,{newListing});
+    req.flash("success","Listing Updated Successfully!");
 
     res.redirect("/listings");
   })
@@ -118,7 +120,7 @@ router.delete(
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     const deletedListing = await Listing.findByIdAndDelete(id); // this line will automatically trigger mongoose middleware
-    console.log(deletedListing);
+     req.flash("success","Listing deleted successfully!")
     res.redirect("/listings");
   })
 );
