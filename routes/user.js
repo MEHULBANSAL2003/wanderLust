@@ -40,6 +40,16 @@ router.post("/login",passport.authenticate("local",{
 async(req,res)=>{
     req.flash("success","Welcome back to WanderLust! You are logged in!");
     res.redirect("/listings");
+});
+
+router.get("/logout",(req,res)=>{
+    req.logOut((err)=>{
+        if(err){
+           return next(err);
+        }
+        req.flash("success","you are logged out successfully!!");
+        res.redirect("/listings");
+    })
 })
 
 
