@@ -7,6 +7,9 @@ const ejsMate=require("ejs-mate"); // for ejs styling.. templating
 const ExpressError=require("./utils/ExpressError.js")
 const session=require("express-session");
 const flash=require("connect-flash");
+const passport=require("passport");
+const LocalStrategy=require("passport-local")
+const User=require("./models/user.js");  
 
  //const {listingSchema,reviewSchema}=require("./schema.js");
  //const Review=require("./models/review.js");
@@ -54,6 +57,16 @@ async function main(){
 
  app.use(session(sessionOptions));
  app.use(flash());
+
+ // we also need sessions for auth.. as for single session we dont want to user to login again and again for different pages
+
+ app.use(passport.initialize()); // to initialize the passport
+ app.use(passport.session());
+ passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser()); // to store the information of user into a session for different pages
+passport.deserializeUser(User.deserializeUser());  // to delete the info of user from session 
+
 
 app.use((req,res,next)=>{
     res.locals.success=req.flash("success");
