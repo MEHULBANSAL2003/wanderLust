@@ -36,6 +36,10 @@ filename:{
         ref:"Review"
     },
  ],
+ owner:{
+    type:Schema.Types.ObjectId,
+    ref:"User",
+ },
 
 
 });
