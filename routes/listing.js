@@ -58,6 +58,7 @@ router.post(
     };
 
     const finalListing = new Listing(newListing);
+     finalListing.owner=req.user._id;
 
     await finalListing.save();
     req.flash("success","new lisitng created successfully!"); // flash msg when new lisitng is created  
@@ -115,11 +116,12 @@ router.get(
   "/:id",
   wrapAsync(async (req, res) => {
     let { id } = req.params;
-    const listing = await Listing.findById(id).populate("reviews"); // for printing actual review
+    const listing = await Listing.findById(id).populate("reviews").populate("owner"); // for printing actual review
     if(!listing){
       req.flash("error","Listing you requested for does not exists!");
       res.redirect("/listings");
     }
+    console.log(listing);
 
     res.render("listings/show.ejs", { listing });
   })
