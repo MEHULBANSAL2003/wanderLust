@@ -86,9 +86,9 @@ router.put(
   validateListing,
   wrapAsync(async (req, res) => {
     let { id } = req.params;
-    console.log(id);
+   // console.log(id);
     let listing = req.body.listing;
-
+    console.log(listing);
     const newListing = {
       title: listing.title,
       description: listing.description,
@@ -100,7 +100,14 @@ router.put(
       location: listing.location,
       country: listing.country,
     };
-
+ 
+    listing=await Listing.findById(id);
+    // console.log(listing.owner);
+    // console.log(res.locals.currUser._id);
+    if(!listing.owner.equals(res.locals.currUser._id)){
+      req.flash("error","You don't have permission to edit");
+     return res.redirect(`/listings/${id}`);
+    }
     const updatedList = await Listing.findByIdAndUpdate(id, newListing);
 
     // Listing.findByIdAndUpdate(id,{newListing});
@@ -121,7 +128,7 @@ router.get(
       req.flash("error","Listing you requested for does not exists!");
       res.redirect("/listings");
     }
-    console.log(listing);
+    //console.log(listing);
 
     res.render("listings/show.ejs", { listing });
   })
