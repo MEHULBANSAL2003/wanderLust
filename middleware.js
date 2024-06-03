@@ -33,6 +33,20 @@ module.exports.validateListing=(req,res,next)=>{
   }
 }
 
+// function for server side validation of reviews
+module.exports.validateReview=(req,res,next)=>{
+  let {error}= reviewSchema.validate(req.body);  // it will check the data.. and if any field is missing it will give error
+  
+  if(error){  // if errorr is there we will throw it...!!
+      let errMsg=error.details.map((el)=> el.message).join(",");
+       console.log(errMsg);
+   throw new ExpressError(400,errMsg);
+  }
+  else{
+      next();
+  }
+}
+
 // module.exports.isReviewAuthor=async(req,res,next)=>{
 //   let {id,reviewId}=req.params;
 //     let review=await Review.findById(reviewId);
