@@ -1,3 +1,4 @@
+const e = require("connect-flash");
 const User=require("../models/user")
 
 module.exports.renderSignupForm=(req, res) => {
@@ -30,7 +31,8 @@ module.exports.signup=async (req, res) => {
 
   module.exports.login=async (req, res) => {
     req.flash("success", "Welcome back to WanderLust! You are logged in!");
-    let redirectUrl=res.locals.redirectUrl || "/listings";
+    let redirectUrl="/listings";
+    console.log(redirectUrl);
     res.redirect(redirectUrl);
   }
 
