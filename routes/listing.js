@@ -6,7 +6,7 @@ const ExpressError=require("../utils/ExpressError.js")
 const Listing=require("../models/listing.js");
 const {isLoggedIn}=require("../middleware.js");
 
-
+const listingController=require("../controllers/listings.js")
 
 // just creating fucntion for validating schema in middleware
 
@@ -27,10 +27,7 @@ const validateListing=(req,res,next)=>{
 // INDEX ROUTE: get request on /listings..!!
 router.get(
   "/",
-  wrapAsync(async (req, res) => {
-    const listings = await Listing.find({});
-    res.render("listings/index.ejs", { listings });
-  })
+  wrapAsync(listingController.index)
 );
 
 // CREATE ROUTE.. for new listing
