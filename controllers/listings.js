@@ -25,6 +25,7 @@ module.exports.index=async (req, res) => {
 
   module.exports.createListing=async (req, res, next) => {
     let listing = req.body.listing;
+    console.log(listing);
 
     const newListing = {
       title: listing.title,

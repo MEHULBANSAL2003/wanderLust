@@ -5,8 +5,12 @@ const { listingSchema } = require("../schema.js");
 const ExpressError = require("../utils/ExpressError.js");
 const Listing = require("../models/listing.js");
 const { isLoggedIn, validateListing } = require("../middleware.js");
-
 const listingController = require("../controllers/listings.js");
+
+
+const multer=require("multer");
+const {storage}=require("../cloudConfig.js");
+const upload=multer({storage});
 
 // INDEX ROUTE: get request on /listings..!!
 router.get("/", wrapAsync(listingController.index));
@@ -20,6 +24,10 @@ router.post(
   validateListing,
   wrapAsync(listingController.createListing)
 );
+
+// router.post("/",upload.single('listing[image]'),(req,res)=>{
+//   res.send(req.file);
+// })
 
 // edit route
 router.get(
