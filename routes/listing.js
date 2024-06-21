@@ -5,6 +5,11 @@ const { listingSchema } = require("../schema.js");
 const ExpressError = require("../utils/ExpressError.js");
 const Listing = require("../models/listing.js");
 const { isLoggedIn, validateListing } = require("../middleware.js");
+<<<<<<< HEAD
+=======
+const multer=require("multer");
+const upload=multer({dest:"uploads/"});
+>>>>>>> 13df7f52ddab5764e88f9920b450447d2dfa4b9e
 const listingController = require("../controllers/listings.js");
 
 
