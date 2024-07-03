@@ -1,7 +1,9 @@
+
 const Listing = require("./models/listing");
 const Review=require("./models/listing");
 const { reviewSchema,listingSchema } = require("./schema.js");
 const ExpressError = require("./utils/ExpressError.js");
+
 
 module.exports.isLoggedIn=(req,res,next)=>{
     if(!req.isAuthenticated()){
@@ -24,6 +26,7 @@ module.exports.saveRedirectUrl=(req,res,next)=>{
 // just creating fucntion for validating schema in middleware
 
 module.exports.validateListing=(req,res,next)=>{
+  console.log(req.body);
   let {error}= listingSchema.validate(req.body);  // it will check the data.. and if any field is missing it will give error
   
   if(error){  // if errorr is there we will throw it...!!
@@ -39,6 +42,7 @@ module.exports.validateListing=(req,res,next)=>{
 
 // function for server side validation of reviews
 module.exports.validateReview=(req,res,next)=>{
+  console.log(req.body);
   let {error}= reviewSchema.validate(req.body);  // it will check the data.. and if any field is missing it will give error
   
   if(error){  // if errorr is there we will throw it...!!

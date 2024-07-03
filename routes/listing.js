@@ -4,18 +4,20 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const { listingSchema } = require("../schema.js");
 const ExpressError = require("../utils/ExpressError.js");
 const Listing = require("../models/listing.js");
-const { isLoggedIn, validateListing } = require("../middleware.js");
-<<<<<<< HEAD
-=======
-const multer=require("multer");
-const upload=multer({dest:"uploads/"});
->>>>>>> 13df7f52ddab5764e88f9920b450447d2dfa4b9e
+const { isLoggedIn,validateListing } = require("../middleware.js");
+
+// const multer=require("multer");
+// const upload=multer({dest:"uploads/"});
+
+
+
+
 const listingController = require("../controllers/listings.js");
 
 
-const multer=require("multer");
-const {storage}=require("../cloudConfig.js");
-const upload=multer({storage});
+// const multer=require("multer");
+// const {storage}=require("../cloudConfig.js");
+// const upload=multer({storage});
 
 // INDEX ROUTE: get request on /listings..!!
 router.get("/", wrapAsync(listingController.index));
@@ -30,9 +32,7 @@ router.post(
   wrapAsync(listingController.createListing)
 );
 
-// router.post("/",upload.single('listing[image]'),(req,res)=>{
-//   res.send(req.file);
-// })
+
 
 // edit route
 router.get(
