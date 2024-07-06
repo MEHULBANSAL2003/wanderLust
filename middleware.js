@@ -55,6 +55,20 @@ module.exports.validateReview=(req,res,next)=>{
   }
 }
 
+module.exports.isOwner=async(req,res,next)=>{
+
+  let { id } = req.params;
+  // console.log(id);
+   let listing=await Listing.findById(id);
+   // console.log(listing.owner);
+   // console.log(res.locals.currUser._id);
+   if(!listing.owner.equals(res.locals.currUser._id)){
+     req.flash("error","You don't have permission to edit");
+    return res.redirect(`/listings/${id}`);
+   }
+   next();
+}
+
 // module.exports.isReviewAuthor=async(req,res,next)=>{
 //   let {id,reviewId}=req.params;
 //     let review=await Review.findById(reviewId);
