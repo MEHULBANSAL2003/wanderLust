@@ -76,13 +76,6 @@ module.exports.index=async (req, res) => {
       country: listing.country,
     };
  
-    listing=await Listing.findById(id);
-    // console.log(listing.owner);
-    // console.log(res.locals.currUser._id);
-    if(!listing.owner.equals(res.locals.currUser._id)){
-      req.flash("error","You don't have permission to edit");
-     return res.redirect(`/listings/${id}`);
-    }
     const updatedList = await Listing.findByIdAndUpdate(id, newListing);
 
     // Listing.findByIdAndUpdate(id,{newListing});

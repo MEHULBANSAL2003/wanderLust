@@ -4,7 +4,7 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const { listingSchema } = require("../schema.js");
 const ExpressError = require("../utils/ExpressError.js");
 const Listing = require("../models/listing.js");
-const { isLoggedIn,validateListing } = require("../middleware.js");
+const { isLoggedIn,validateListing,isOwner } = require("../middleware.js");
 
 // const multer=require("multer");
 // const upload=multer({dest:"uploads/"});
@@ -45,6 +45,7 @@ router.get(
 router.put(
   "/:id",
   isLoggedIn,
+  isOwner,
   validateListing,
   wrapAsync(listingController.updateListing)
 );
@@ -53,6 +54,6 @@ router.put(
 
 router.get("/:id", wrapAsync(listingController.showListing));
 
-router.delete("/:id", isLoggedIn, wrapAsync(listingController.deleteListing));
+router.delete("/:id", isLoggedIn, isOwner,wrapAsync(listingController.deleteListing));
 
 module.exports = router;
