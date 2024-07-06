@@ -7,7 +7,8 @@ const Listing = require("../models/listing.js");
 const { isLoggedIn,validateListing,isOwner } = require("../middleware.js");
 
 const multer=require("multer");
-const upload=multer({dest:"uploads/"});
+const {storage}=require("../cloudConfig.js");
+const upload=multer({storage});
 
 
 
@@ -15,9 +16,7 @@ const upload=multer({dest:"uploads/"});
 const listingController = require("../controllers/listings.js");
 
 
-// const multer=require("multer");
-// const {storage}=require("../cloudConfig.js");
-// const upload=multer({storage});
+
 
 // INDEX ROUTE: get request on /listings..!!
 router.get("/", wrapAsync(listingController.index));
@@ -30,8 +29,10 @@ router.post(
   // isLoggedIn,
   // validateListing,
   // wrapAsync(listingController.createListing)
-  upload.single('listing[image]'),(req,res)=>{
+  upload.single('listing[image]'),(req,res)=>{ 
+    console.log("done")
     res.send(req.file);
+    
   });
 
 
