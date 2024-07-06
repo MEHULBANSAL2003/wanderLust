@@ -6,8 +6,8 @@ const ExpressError = require("../utils/ExpressError.js");
 const Listing = require("../models/listing.js");
 const { isLoggedIn,validateListing,isOwner } = require("../middleware.js");
 
-// const multer=require("multer");
-// const upload=multer({dest:"uploads/"});
+const multer=require("multer");
+const upload=multer({dest:"uploads/"});
 
 
 
@@ -27,10 +27,12 @@ router.get("/new", isLoggedIn, listingController.renderNewForm);
 
 router.post(
   "/",
-  isLoggedIn,
-  validateListing,
-  wrapAsync(listingController.createListing)
-);
+  // isLoggedIn,
+  // validateListing,
+  // wrapAsync(listingController.createListing)
+  upload.single('listing[image]'),(req,res)=>{
+    res.send(req.file);
+  });
 
 
 
