@@ -26,14 +26,11 @@ router.get("/new", isLoggedIn, listingController.renderNewForm);
 
 router.post(
   "/",
-  // isLoggedIn,
-  // validateListing,
-  // wrapAsync(listingController.createListing)
-  upload.single('listing[image]'),(req,res)=>{ 
-    console.log("done")
-    res.send(req.file);
-    
-  });
+  isLoggedIn,
+  upload.single('listing[image]'),
+  validateListing,
+  wrapAsync(listingController.createListing)
+)
 
 
 

@@ -25,20 +25,19 @@ module.exports.index=async (req, res) => {
 
   module.exports.createListing=async (req, res, next) => {
     let listing = req.body.listing;
-    console.log(listing);
+    let url=req.file.path;
+    let filename=req.file.filename;
+
 
     const newListing = {
       title: listing.title,
       description: listing.description,
-      image: {
-        filename: "listingimage",
-        url: listing.image,
-      },
       price: listing.price,
       location: listing.location,
       country: listing.country,
     };
 
+    newListing.image={url,filename};
     const finalListing = new Listing(newListing);
      finalListing.owner=req.user._id;
 
