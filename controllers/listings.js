@@ -66,14 +66,20 @@ module.exports.index=async (req, res) => {
     const newListing = {
       title: listing.title,
       description: listing.description,
-      image: {
-        filename: "listingimage",
-        url: listing.image,
-      },
+      // image: {
+       
+      //   filename: req.file.filename,
+      //   url: req.file.path,
+      // },
       price: listing.price,
       location: listing.location,
       country: listing.country,
     };
+    if(typeof req.file!=="undefined"){
+      let url=req.file.path;
+      let filename=req.file.filename;
+      newListing.image={url,filename};
+    }
  
     const updatedList = await Listing.findByIdAndUpdate(id, newListing);
 
